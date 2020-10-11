@@ -1,0 +1,35 @@
+{
+	"pois": [
+		{
+			"Name": "Crashed drone",
+			"Latitude": -9.933245,
+			"Longitude": -50.169037,
+			"BodyName": "Luchtaine A 2 a"
+		}
+	],
+	"location": {
+		"timestamp": "2020-10-10T19:33:04Z",
+		"event": "Status",
+		"Flags": 421593102,
+		"Pips": [
+			2,
+			8,
+			2
+		],
+		"FireGroup": 3,
+		"GuiFocus": 3,
+		"Fuel": {
+			"FuelMain": 32,
+			"FuelReservoir": 0.24921
+		},
+		"Cargo": 2,
+		"LegalState": "Clean",
+		"Latitude": -15.706686,
+		"Longitude": 76.740746,
+		"Heading": 139,
+		"Altitude": 0,
+		"BodyName": "Luchtaine A 2 a",
+		"PlanetRadius": 867536.4375
+	},
+	"radius": 867536.4375
+}

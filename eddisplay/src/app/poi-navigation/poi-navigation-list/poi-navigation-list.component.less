@@ -1,0 +1,16 @@
+@import "../../../colors.less";
+
+button {
+	border: 1px solid @highlight-color;
+	background-color: black;
+	color: @color;
+}
+
+button:disabled {
+	color: darken(@color, 25%) !important;
+}
+
+button:hover {
+	color: @highlight-color;
+}
+

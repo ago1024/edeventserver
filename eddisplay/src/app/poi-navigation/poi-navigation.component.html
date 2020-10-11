@@ -1,0 +1,14 @@
+<h1>POI Naviation</h1>
+
+<p>
+	Current location:
+	<span *ngIf="service.location">
+		Lon {{service.location.Longitude}}
+		Lat {{service.location.Latitude}}
+	</span>
+	<span *ngIf="!service.location">
+		Unknown
+	</span>
+</p>
+
+<app-poi-navigation-list></app-poi-navigation-list>
