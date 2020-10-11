@@ -2,10 +2,9 @@
 
 <p>
 	Current location:
-	<span *ngIf="service.location">
-		Lon {{service.location.Longitude}}
-		Lat {{service.location.Latitude}}
+	<span class="text-upper" *ngIf="service.location">
 		{{service.location.BodyName}}
+		({{service.location.Latitude}}, {{service.location.Longitude}})
 	</span>
 	<span *ngIf="!service.location">
 		Unknown
@@ -26,10 +25,10 @@
 	</tr>
 	<tr>
 		<td>
-			<input [(ngModel)]="poiLon" required placeholder="Longitude">
+			<input [(ngModel)]="poiLat" required placeholder="Latitude">
 		</td>
 		<td>
-			<input [(ngModel)]="poiLat" required placeholder="Latitude">
+			<input [(ngModel)]="poiLon" required placeholder="Longitude">
 		</td>
 		<td>
 			<button (click)="addPoi()" [disabled]="!service.location || poiLon === undefined || poiLat === undefined ? true : null">

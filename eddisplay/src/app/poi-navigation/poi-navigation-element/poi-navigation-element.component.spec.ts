@@ -42,7 +42,8 @@ describe('PoiNavigationElementComponent', () => {
 
 	it('should show the location', () => {
 		fixture.detectChanges();
-		expect(fixture.nativeElement.querySelector('.poi-location').innerText).toEqual('Crashed drone Lon -50.169037 Lat -9.933245');
+		expect(fixture.nativeElement.querySelector('.poi-location').innerText)
+			.toEqual('CRASHED DRONE · LUCHTAINE A 2 A (-9.933245, -50.169037)');
 	});
 
 	it('should calculate the status', () => {
