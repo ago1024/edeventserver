@@ -4,6 +4,7 @@ import { JournalEvent } from '../interfaces';
 import { filter } from 'rxjs/operators';
 
 import * as sample from './poi-navigation.service.sample.json';
+import { environment } from 'src/environments/environment';
 
 export interface Location {
 	Latitude: number;
@@ -43,9 +44,11 @@ export class PoiNavigationService {
 			.pipe(filter(event => event.event === 'Status'))
 			.subscribe(event => this.updateStatus(event as StatusEvent));
 
-		// Debug values
-		this.pois = sample.pois;
-		this.location = sample.location;
+		if (!environment.production) {
+			// Debug values
+			this.pois = sample.pois;
+			this.location = sample.location;
+		}
 	}
 
 	private updateStatus(event: StatusEvent): void {
@@ -71,7 +74,7 @@ export class PoiNavigationService {
 		if (!from) {
 			from = this.location;
 		}
-		if (!from || !to || from.BodyName !== to.BodyName) {
+		if (!from || !to || !from.BodyName || !to.BodyName || from.BodyName !== to.BodyName) {
 			return undefined;
 		}
 
