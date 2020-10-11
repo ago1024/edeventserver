@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { NavigationStatus, PoiNavigationService, PointOfInterest, Location } from '../poi-navigation.service';
+import { NavigationStatus, PoiNavigationService, PointOfInterest, Location, CurrentLocation } from '../poi-navigation.service';
 
 @Component({
 	selector: 'app-poi-navigation-element',
@@ -12,7 +12,7 @@ export class PoiNavigationElementComponent implements OnInit, OnChanges {
 	poi: PointOfInterest;
 
 	@Input()
-	current: Location;
+	current: CurrentLocation;
 
 	status: NavigationStatus;
 

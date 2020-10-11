@@ -11,12 +11,15 @@ export interface Location {
 	BodyName: string;
 }
 
+export interface CurrentLocation extends Location {
+	PlanetRadius?: number;
+}
+
 export interface PointOfInterest extends Location {
 	Name?: string;
 }
 
-export interface StatusEvent extends JournalEvent, Location {
-	PlanetRadius?: number;
+export interface StatusEvent extends JournalEvent, CurrentLocation {
 }
 
 export interface NavigationStatus {
@@ -33,8 +36,7 @@ export interface NavigationStatus {
 export class PoiNavigationService {
 
 	pois: PointOfInterest[] = [];
-	location: Location;
-	radius: number;
+	location: CurrentLocation;
 
 	constructor(eventService: EdEventService) {
 		eventService.events$
@@ -44,16 +46,13 @@ export class PoiNavigationService {
 		// Debug values
 		this.pois = sample.pois;
 		this.location = sample.location;
-		this.radius = sample.radius;
 	}
 
 	private updateStatus(event: StatusEvent): void {
 		if (!event || !event.BodyName || event.Longitude === undefined || event.Latitude === undefined) {
 			this.location = undefined;
-			this.radius = undefined;
 		}
 		this.location = event;
-		this.radius = event.PlanetRadius;
 	}
 
 	addPointOfInterest(poi: PointOfInterest): void {
@@ -68,7 +67,7 @@ export class PoiNavigationService {
 		}
 	}
 
-	calculateNavigationStatus(to: Location, from: Location): NavigationStatus {
+	calculateNavigationStatus(to: Location, from?: CurrentLocation): NavigationStatus {
 		if (!from) {
 			from = this.location;
 		}
@@ -97,7 +96,7 @@ export class PoiNavigationService {
 		const θ = Math.atan2(y, x);
 		const brng = (θ*180/Math.PI + 360) % 360; // in degrees
 
-		const d = this.radius * c; // in metres
+		const d = from.PlanetRadius ? from.PlanetRadius * c : undefined; // in metres
 
 		return {
 			From: from,

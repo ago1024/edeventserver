@@ -1,4 +1,4 @@
 <div>
-	<p>{{poi.Name}} Lon {{poi.Longitude}} Lat {{poi.Latitude}}</p>
-	<p *ngIf="status">Bearing {{status.Bearing | number: '1.0-0' }} Distance {{ status.Distance | distance }}</p>
+	<p class="poi-location">{{poi.Name}} Lon {{poi.Longitude}} Lat {{poi.Latitude}}</p>
+	<p class="poi-status" *ngIf="status">Bearing {{status.Bearing | number: '1.0-0' }} Distance {{ status.Distance | distance }}</p>
 </div>
