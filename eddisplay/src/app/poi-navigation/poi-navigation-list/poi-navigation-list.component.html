@@ -1,21 +1,8 @@
-<ng-container>
-	<input [(ngModel)]="poiName" required placeholder="Enter POI name">
-	<button (click)="addCurrentLocation()" [disabled]="!service.location ? true : null">
-		Add current location
-	</button><br>
-
-	<input [(ngModel)]="poiLon" required placeholder="Longitude">
-	<input [(ngModel)]="poiLat" required placeholder="Latitude">
-	<button (click)="addPoi()" [disabled]="!service.location || poiLon === undefined || poiLat === undefined ? true : null">
-		Add POI
-	</button><br>
-
-</ng-container>
-
-<p>POIs</p>
 <ul>
 	<li *ngFor="let poi of service.pois">
-		<app-poi-navigation-element [poi]="poi" [current]="service.location"></app-poi-navigation-element>
-		<button (click)="service.removePointOfInterest(poi)">X</button>
+		<div>
+			<app-poi-navigation-element [poi]="poi" [current]="service.location"></app-poi-navigation-element>
+			<button (click)="service.removePointOfInterest(poi)">X</button>
+		</div>
 	</li>
 </ul>

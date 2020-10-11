@@ -5,10 +5,39 @@
 	<span *ngIf="service.location">
 		Lon {{service.location.Longitude}}
 		Lat {{service.location.Latitude}}
+		{{service.location.BodyName}}
 	</span>
 	<span *ngIf="!service.location">
 		Unknown
 	</span>
 </p>
 
+<p>Add POI</p>
+<table>
+	<tr>
+		<td colspan="2">
+			<input [(ngModel)]="poiName" required placeholder="Enter POI name">
+		</td>
+		<td>
+			<button (click)="addCurrentLocation()" [disabled]="!service.location ? true : null">
+				Add current location
+			</button>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input [(ngModel)]="poiLon" required placeholder="Longitude">
+		</td>
+		<td>
+			<input [(ngModel)]="poiLat" required placeholder="Latitude">
+		</td>
+		<td>
+			<button (click)="addPoi()" [disabled]="!service.location || poiLon === undefined || poiLat === undefined ? true : null">
+				Add POI
+			</button>
+		</td>
+	</tr>
+</table>
+
+<p>POIs</p>
 <app-poi-navigation-list></app-poi-navigation-list>

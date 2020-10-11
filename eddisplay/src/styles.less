@@ -37,3 +37,38 @@ nav a.active {
 	color: black;
 	background-color: @highlight-color;
 }
+
+input {
+	border: 1px solid @color;
+	background-color: black;
+	color: @color;
+	padding: 5px;
+	margin: 5px;
+}
+
+:focus {
+	border: 1px solid @highlight-color;
+	outline: none;
+	color: @highlight-color;
+}
+
+input::placeholder {
+	color: darken(@color, 25%);
+}
+
+button {
+	border: 1px solid @color;
+	background-color: black;
+	color: @color;
+	padding: 5px;
+	margin: 5px;
+}
+
+button:disabled {
+	color: darken(@color, 25%) !important;
+}
+
+button:hover {
+	border: 1px solid @highlight-color;
+	color: @highlight-color;
+}
