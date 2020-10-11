@@ -10,6 +10,7 @@ import { PoiNavigationComponent } from './poi-navigation/poi-navigation.componen
 import { PoiNavigationListComponent } from './poi-navigation/poi-navigation-list/poi-navigation-list.component';
 import { PoiNavigationElementComponent } from './poi-navigation/poi-navigation-element/poi-navigation-element.component';
 import { FormsModule } from '@angular/forms';
+import { DistancePipe } from './distance.pipe';
 
 @NgModule({
 	declarations: [
@@ -19,7 +20,8 @@ import { FormsModule } from '@angular/forms';
 		CurrentTargetComponent,
 		PoiNavigationComponent,
 		PoiNavigationListComponent,
-		PoiNavigationElementComponent
+		PoiNavigationElementComponent,
+		DistancePipe,
 	],
 	imports: [
 		BrowserModule,
