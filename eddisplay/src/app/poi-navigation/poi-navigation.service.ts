@@ -54,8 +54,9 @@ export class PoiNavigationService {
 	private updateStatus(event: StatusEvent): void {
 		if (!event || !event.BodyName || event.Longitude === undefined || event.Latitude === undefined) {
 			this.location = undefined;
+		} else {
+			this.location = event;
 		}
-		this.location = event;
 	}
 
 	addPointOfInterest(poi: PointOfInterest): void {
