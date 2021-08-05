@@ -4,7 +4,7 @@
 
 export const environment = {
 	production: false,
-	serverEndpoint: 'ws://lupus:8000'
+	serverEndpoint: 'ws://lutra:8000'
 };
 
 /*

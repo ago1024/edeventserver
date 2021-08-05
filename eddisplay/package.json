@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host lupus",
+    "start": "ng serve --host lutra",
     "build": "ng build",
     "release": "ng build --prod --base-href /eddisplay/",
     "test": "ng test",
