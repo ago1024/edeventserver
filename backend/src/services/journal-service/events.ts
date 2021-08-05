@@ -181,3 +181,13 @@ export interface FSDJumpEvent extends StarSystemEvent {
 	FuelUsed: number;
 	FuelLevel: number;
 }
+
+export interface MicroResourcesEvent extends JournalEvent {
+	TotalCount: number;
+	MicroResources: {
+		Name: string;
+		Name_Localised?: string;
+		Category: 'Item' | 'Data';
+		Count: number;
+	}[];
+}
