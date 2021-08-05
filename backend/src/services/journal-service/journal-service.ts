@@ -1,7 +1,8 @@
-import { Observable, PartialObserver, Subject, Subscribable, Unsubscribable } from "rxjs";
-import { filter, map } from 'rxjs/operators';
+import { concat, from, Observable, of, Subscriber } from "rxjs";
+import { concatMap, distinctUntilKeyChanged, filter, map, mergeMap, shareReplay, tap } from 'rxjs/operators';
 import { service as saveFileService } from "../savefile-discovery-service";
 import { JournalEvent } from "./events";
+import { FsWatcherService } from "./fs-watcher";
 
 import fs = require("fs");
 import path = require("path");
@@ -14,11 +15,7 @@ interface JournalFileEntry {
 	name: string;
 	ts1: number;
 	ts2: number;
-}
-
-interface FileChangeEvent {
-	name: string;
-	path: string;
+	latest?: boolean;
 }
 
 const re = /Journal\.([0-9]*)\.([0-9]*)\.log/;
@@ -27,15 +24,17 @@ function compareJournalFileEntry(a: JournalFileEntry, b: JournalFileEntry) {
 	return (a.ts1 - b.ts1) || (a.ts1 - b.ts2) || 0;
 }
 
-class JournalReader {
+export class JournalEventReader {
 	private _lastsize = 0;
-	private _subject: Subject<JournalEvent>;
 
-	constructor(private _current: JournalFileEntry) {
-		this._subject = new Subject<JournalEvent>();
+	private constructor(private _current: JournalFileEntry, private _watch: boolean, private _subscriber: Subscriber<JournalEvent>) {
 		const stat = fs.statSync(this._current.name);
 		this.read();
 		this._lastsize = stat.size;
+
+		if (!_watch) {
+			return;
+		}
 	
 		// using watchfile here because Windows does not report any changes for open files. Calling
 		// stat() on the file will update the file size in Windows and trigger the watcher. Since
@@ -48,15 +47,16 @@ class JournalReader {
 		});
 	}
 
-	get observable$(): Observable<JournalEvent> {
-		return this._subject;
+	static create(current: JournalFileEntry, watch?: boolean): Observable<JournalEvent> {
+		return new Observable<JournalEvent>(subscriber => {
+			const reader = new JournalEventReader(current, watch, subscriber);
+			return () => {
+				reader.close();
+			}
+		});
 	}
 
-	get current(): JournalFileEntry {
-		return this._current;
-	}
-
-	change() {
+	change(): void {
 		if (!this._current)
 			return;
 
@@ -67,10 +67,9 @@ class JournalReader {
 		}
 	}
 
-	read() {
+	read(): void {
 		const stream = fs.createReadStream(this._current.name, {
 			start: this._lastsize,
-			
 		});
 
 		const rl = readline.createInterface({
@@ -80,61 +79,77 @@ class JournalReader {
 
 		rl.on("line", (line) => {
 			const event = JSON.parse(line) as JournalEvent;
-			this._subject.next(event);
+			this._subscriber.next(event);
+			if (event.event === 'Shutdown') {
+				log.extend('JournalEventReader')('shutdown');
+				this.close();
+			}
+		});
+
+		stream.on("pause", () => {
+			log.extend('JournalEventReader')('pause');
+			if (!this._watch) {
+				this.close();
+			}
 		});
 	}
 
 	close(): void {
+		log.extend('JournalEventReader')('close');
 		fs.unwatchFile(this._current.name);
-		this._current = undefined;
+		this._subscriber.complete();
 	}
 }
 
-export class JournalService {
-	private _watcher: fs.FSWatcher;
-	private _subject: Subject<JournalEvent>;
-	private _fileUpdates: Subject<FileChangeEvent>;
-	private _current: JournalReader;
-	private _folder: string;
+export class JournalFileObservable extends Observable<JournalFileEntry> {
 
-	constructor() {
-		this._subject = new Subject<JournalEvent>();
-		this._folder = saveFileService.folder;
-		this._fileUpdates = new Subject<FileChangeEvent>();
+	constructor(private _folder: string, watch: boolean, includeHistoric?: boolean) {
+		super(subscriber => {
+			const fsWatcher = new FsWatcherService(this._folder);
 
-		const latestJournal = this.findLatestJournalFile();
-		if (latestJournal) {
-			this.open(latestJournal);
-		}
+			let newestJournalFile: JournalFileEntry = undefined;
 
-		this._watcher = fs.watch(this._folder, { persistent: true }, (eventType, filename) => {
-			switch (eventType) {
-				case "rename":
-					return this.renameEvent(filename);
-				case "change":
-					return this.changeEvent(filename);
-				default:
-					log.log(`Unknown event type ${eventType}`);
+			const pipes = [
+				from(this.findJournalFiles()).pipe(
+					mergeMap(journalFiles => {
+						newestJournalFile = journalFiles.pop();
+						const historicFiles = includeHistoric ? journalFiles : [];
+						return of(...historicFiles, {...newestJournalFile, latest: true});
+					}),
+				),
+				fsWatcher.changes$.pipe(
+					filter(change => change.type === 'rename'),
+					map(change => this.parseJournalFileEntry(change.name, this._folder)),
+					filter(journalFile => !!journalFile),
+					filter(journalFile => this.isNewerThan(newestJournalFile, journalFile)),
+					tap(journalFile => newestJournalFile = journalFile),
+					map(journalFile => ({...journalFile, newest: true}))
+				),
+			];
+
+			if (!watch) {
+				pipes.pop();
 			}
-		});
 
-		this._fileUpdates
-			.pipe(
-				filter(event => event.name === "Status.json"),
-				map(event => this.readEvent(event.path)),
-				filter(event => !!event))
-			.subscribe({
-				next: (e) => this._subject.next(e),
-				error: (e) => this._subject.error(e),
-			});
+			const subscription = concat(...pipes).pipe(
+				distinctUntilKeyChanged('name'),
+			).subscribe(subscriber);
+			return subscription;
+		});
 	}
 
-	private readEvent(path: string): JournalEvent {
-		const buffer = fs.readFileSync(path);
-		if (buffer.length === 0)
-			return undefined;
-		const event = JSON.parse(buffer.toString()) as JournalEvent;
-		return event;
+	private isNewerThan(newestJournalFile: JournalFileEntry, entry: JournalFileEntry) {
+		if (!entry)
+			return false;
+
+		if (newestJournalFile && compareJournalFileEntry(newestJournalFile, entry) >= 0)
+			return false;
+
+		const stat = fs.statSync(entry.name);
+		if (!stat.isFile())
+			return false;
+
+		return true;
 	}
 
 	private parseJournalFileEntry(name: string, folder: string): JournalFileEntry {
@@ -149,12 +164,10 @@ export class JournalService {
 		};
 	}
 
-	private findLatestJournalFile(): JournalFileEntry {
-
-		const dir = fs.opendirSync(this._folder)
+	private async findJournalFiles(): Promise<JournalFileEntry[]> {
+		const dir = await fs.promises.opendir(this._folder)
 		const entries: JournalFileEntry[] = [];
-		let dirent: fs.Dirent;
-		while ((dirent = dir.readSync())) {
+		for await (const dirent of dir) {
 			if (!dirent.isFile())
 				continue;
 
@@ -163,69 +176,57 @@ export class JournalService {
 				continue;
 			entries.push(entry);
 		}
-		dir.closeSync();
 
 		entries.sort(compareJournalFileEntry);
-		return entries.pop();
+		return entries;
+	}
+}
+
+
+export class JournalService {
+	private _folder: string;
+	private _journal: Observable<JournalEvent>;
+
+	constructor() {
+		this._folder = saveFileService.folder;
+
+		const journalObservable = new JournalFileObservable(saveFileService.folder, true).pipe(
+			concatMap(entry => JournalEventReader.create(entry, entry.latest)),
+			map(event => {
+				switch (event.event) {
+					case "NavRoute":
+						return this.readEvent(path.resolve(this._folder, "NavRoute.json"));
+					case "ModuleInfo":
+						return this.readEvent(path.resolve(this._folder, "ModulesInfo.json"));
+					case "Market":
+						return this.readEvent(path.resolve(this._folder, "Market.json"));
+					default:
+						return event;
+				}
+			}),
+		);
+
+		const statusObservable = new FsWatcherService(saveFileService.folder).changes$.pipe(
+			filter(event => event.type === 'change' && event.name === "Status.json"),
+			map(event => this.readEvent(event.path)),
+			filter(event => !!event),
+		);
+
+		this._journal = concat(journalObservable, statusObservable).pipe(
+			shareReplay({refCount: true}),
+		);
+
 	}
 
-	public close(): void {
-		if (this._current) {
-			this._current.close();
-			this._current = undefined;
-		}
-		this._watcher.close();
-		this._subject.complete();
-	}
-
-	private open(journal: JournalFileEntry): void {
-		if (this._current) {
-			log(`close ${this._current.current.name}`);
-			this._current.close();
-		}
-		log(`open ${journal.name}`);
-		this._current = new JournalReader(journal);
-		this._current.observable$
-			.pipe(map(event => this.handleEvents(event)), filter(event => !!event))
-			.subscribe({
-				next: (e) => this._subject.next(e),
-				error: (e) => this._subject.error(e),
-			});
-	}
-
-	private handleEvents(event: JournalEvent): JournalEvent {
-		switch (event.event) {
-			case "NavRoute":
-				return this.readEvent(path.resolve(this._folder, "NavRoute.json"));
-			default:
-				return event;
-		}
-	}
-
-	private renameEvent(filename: string): void {
-		log(`renameEvent ${filename}`);
-		const entry = this.parseJournalFileEntry(filename, this._folder);
-		if (!entry)
-			return;
-
-		const current = this._current?.current;
-		if (current && compareJournalFileEntry(current, entry) > 0)
-			return;
-
-		const stat = fs.statSync(entry.name);
-		if (!stat.isFile())
-			return;
-		
-		this.open(entry);
-	}
-
-	private changeEvent(filename: string): void {
-		log(`changeEvent ${filename}`);
-		this._fileUpdates.next({ name: filename, path: path.resolve(this._folder, filename) });
+	private readEvent(path: string): JournalEvent {
+		const buffer = fs.readFileSync(path);
+		if (buffer.length === 0)
+			return undefined;
+		const event = JSON.parse(buffer.toString()) as JournalEvent;
+		return event;
 	}
 
 	get journal(): Observable<JournalEvent> {
-		return this._subject;
+		return this._journal;
 	}
-
 }
