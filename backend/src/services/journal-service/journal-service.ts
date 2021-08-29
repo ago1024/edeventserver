@@ -123,7 +123,7 @@ export class JournalFileObservable extends Observable<JournalFileEntry> {
 					filter(journalFile => !!journalFile),
 					filter(journalFile => this.isNewerThan(newestJournalFile, journalFile)),
 					tap(journalFile => newestJournalFile = journalFile),
-					map(journalFile => ({...journalFile, newest: true}))
+					map(journalFile => ({...journalFile, latest: true}))
 				),
 			];
 
