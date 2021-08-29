@@ -1,4 +1,4 @@
-import { concat, from, Observable, of, Subscriber } from "rxjs";
+import { concat, from, merge, Observable, of, Subscriber } from "rxjs";
 import { concatMap, distinctUntilKeyChanged, filter, map, mergeMap, shareReplay, tap } from 'rxjs/operators';
 import { service as saveFileService } from "../savefile-discovery-service";
 import { JournalEvent } from "./events";
@@ -212,7 +212,7 @@ export class JournalService {
 			filter(event => !!event),
 		);
 
-		this._journal = concat(journalObservable, statusObservable).pipe(
+		this._journal = merge(journalObservable, statusObservable).pipe(
 			shareReplay({refCount: true}),
 		);
 
