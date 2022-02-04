@@ -44,6 +44,7 @@
             "SwitchCase": 1
           }
         ],
+        "max-len": ["error", { "code": 200 }],
         "no-trailing-spaces": "error",
         "@angular-eslint/directive-selector": [
           "error",
@@ -77,7 +78,7 @@
          * There is an example below from ESLint core (note, this specific example is not
          * necessarily recommended for all projects):
          */
-        "max-len": ["error", { "code": 140 }]
+        "max-len": ["error", { "code": 200 }]
       }
     },
 

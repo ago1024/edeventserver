@@ -29,7 +29,6 @@ export class EdEventService {
 	private handleMessage(message: MessageEvent): void {
 		try {
 			const event = JSON.parse(message.data) as JournalEvent;
-			console.log(event);
 			this.subject$.next(event);
 		} catch (error) {
 			console.error(error);
