@@ -1,5 +1,5 @@
 import { concat, from, merge, Observable, of, Subscriber } from "rxjs";
-import { concatMap, distinctUntilKeyChanged, filter, map, mergeMap, shareReplay, tap } from 'rxjs/operators';
+import { distinctUntilKeyChanged, filter, map, mergeMap, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { service as saveFileService } from "../savefile-discovery-service";
 import { JournalEvent } from "./events";
 import { FsWatcherService } from "./fs-watcher";
@@ -191,7 +191,7 @@ export class JournalService {
 		this._folder = saveFileService.folder;
 
 		const journalObservable = new JournalFileObservable(saveFileService.folder, true).pipe(
-			concatMap(entry => JournalEventReader.create(entry, entry.latest)),
+			switchMap(entry => JournalEventReader.create(entry, entry.latest)),
 			map(event => {
 				switch (event.event) {
 					case "NavRoute":
