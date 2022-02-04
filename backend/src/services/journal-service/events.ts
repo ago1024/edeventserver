@@ -191,3 +191,15 @@ export interface MicroResourcesEvent extends JournalEvent {
 		Count: number;
 	}[];
 }
+
+
+export interface Engineer {
+	Engineer: string;
+	EngineerID: number;
+	Progress: 'Unlocked' | 'Known';
+	RankProgress?: number;
+	Rank?: number;
+}
+export interface EngineerProgressEvent extends JournalEvent, Engineer {
+	Engineers: Engineer[];
+}
