@@ -107,7 +107,7 @@ export class SystemInfoService {
 
 			const faction_states = (faction.ActiveStates || [])
 				.map(state => (state.State && states[state.State]) ?? console.warn('Unsupported State', state.State) ?? '')
-				.join('');
+				.join(' ');
 
 			lines.push(`${faction.Name}: ${formatter.format(faction.Influence)} ${standings} ${faction_states}`);
 		}
