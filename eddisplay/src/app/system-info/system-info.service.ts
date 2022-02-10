@@ -1,7 +1,7 @@
 /* eslint-disable quote-props */
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY } from 'rxjs';
-import { catchError, filter, map } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, of } from 'rxjs';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
 
@@ -38,7 +38,8 @@ export interface Conflict {
 	Faction2: ConflictFaction;
 }
 
-export interface FactionsInfoEvent {
+export interface FactionsInfoEvent extends JournalEvent {
+	event: 'FSDJumpEvent' | 'Location';
 	StarSystem: string;
 	Factions: Faction[];
 	SystemFaction: {
@@ -48,7 +49,12 @@ export interface FactionsInfoEvent {
 	Conflicts?: Conflict[];
 }
 
-export interface FSDJumpEvent extends JournalEvent, FactionsInfoEvent {
+export interface FSDJumpEvent extends FactionsInfoEvent {
+	event: 'FSDJumpEvent';
+}
+
+export interface LocationEvent extends FactionsInfoEvent {
+	event: 'Location';
 }
 
 const states = {
@@ -66,6 +72,10 @@ const conflict_types = {
 	'civilwar': ':umop:',
 	'election': ':ballot_box:',
 }
+const conflict_status = {
+	'pending': ':timer:',
+	'active': '',
+}
 
 const formatter = Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 1});
 
@@ -74,10 +84,10 @@ const formatter = Intl.NumberFormat('en-US', { style: 'percent', minimumFraction
 })
 export class SystemInfoService {
 
-	private readonly _current = new BehaviorSubject<FSDJumpEvent>(undefined);
+	private readonly _current = new BehaviorSubject<FactionsInfoEvent>(undefined);
 
 	public readonly currentInfo$ = this._current.pipe(
-		filter(event => !!event),
+		filter(event => !!event && !!event.Factions),
 		map(event => this.createInfo(event)),
 		catchError(error => {
 			console.error(error);
@@ -87,11 +97,23 @@ export class SystemInfoService {
 
 	constructor(eventService: EdEventService) {
 		eventService.events$
-			.pipe(filter(event => event.event === 'FSDJump'))
+			.pipe(
+				switchMap(event => {
+					switch (event?.event) {
+						case 'FSDJump':
+							return of(event as FSDJumpEvent);
+						case 'Location':
+							return of(event as LocationEvent);
+						default:
+							return EMPTY;
+					}
+				}),
+				filter(event => !!event.Factions),
+			)
 			.subscribe(this._current);
 	}
 
-	private createInfo(info: FSDJumpEvent) {
+	private createInfo(info: FactionsInfoEvent) {
 		let lines = [];
 
 		lines.push(`:satellite: ${info.StarSystem}`);
@@ -103,7 +125,8 @@ export class SystemInfoService {
 				.map(conflict => conflict.Faction1.Name == faction.Name ? conflict : {...conflict, Faction1: conflict.Faction2, Faction2: conflict.Faction1})
 				.shift();
 
-			const standings = conflict && `(${conflict_types[conflict.WarType]} ${conflict.Faction1.WonDays}-${conflict.Faction2.WonDays})` || '';
+			const standings = conflict && conflict.Status &&
+				`(${conflict_types[conflict.WarType]}${conflict_status[conflict.Status] || ''} ${conflict.Faction1.WonDays}-${conflict.Faction2.WonDays})` || '';
 
 			const faction_states = (faction.ActiveStates || [])
 				.map(state => (state.State && states[state.State]) ?? console.warn('Unsupported State', state.State) ?? '')
