@@ -18,7 +18,8 @@ interface JournalFileEntry {
 	latest?: boolean;
 }
 
-const re = /Journal\.([0-9]*)\.([0-9]*)\.log/;
+const re = /Journal\.([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})\.([0-9]*)\.log/;
+const re2 = /Journal\.([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2})([0-9]{2})([0-9]{2})\.([0-9]*)\./;
 
 function compareJournalFileEntry(a: JournalFileEntry, b: JournalFileEntry) {
 	return (a.ts1 - b.ts1) || (a.ts1 - b.ts2) || 0;
@@ -152,16 +153,33 @@ export class JournalFileObservable extends Observable<JournalFileEntry> {
 		return true;
 	}
 
-	private parseJournalFileEntry(name: string, folder: string): JournalFileEntry {
-		const match = name.match(re);
-		if (!match)
-			return undefined;
-
-		return {
+	private parseJournalFileEntryTimestamp(name: string, folder: string, date: string, ts2: string): JournalFileEntry | undefined {
+		const result = {
 			name: path.resolve(folder, name),
-			ts1: parseInt(match[1]),
-			ts2: parseInt(match[2]),
+			ts1: Date.parse(date),
+			ts2: parseInt(ts2),
 		};
+		if (isNaN(result.ts1) || isNaN(result.ts2)) {
+			console.log(date, ts2);
+			return undefined;
+		}
+		return result;
+	}
+
+	private parseJournalFileEntry(name: string, folder: string): JournalFileEntry | undefined {
+		const match1 = name.match(re);
+		const match2 = name.match(re2);
+
+		let ts;
+		if (match1) {
+			const date = `20${match1[1]}-${match1[2]}-${match1[3]}T${match1[4]}:${match1[5]}:${match1[6]}`;
+			return this.parseJournalFileEntryTimestamp(name, folder, date, match1[7]);
+		} else if (match2) {
+			const date = `${match2[1]}T${match2[2]}:${match2[3]}:${match2[4]}`;
+			return this.parseJournalFileEntryTimestamp(name, folder, date, match2[5]);
+		} else {
+			return undefined;
+		}
 	}
 
 	private async findJournalFiles(): Promise<JournalFileEntry[]> {
