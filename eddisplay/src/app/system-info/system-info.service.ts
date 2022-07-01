@@ -59,13 +59,20 @@ export interface LocationEvent extends FactionsInfoEvent {
 
 const states = {
 	'War': '',
+	'CivilWar': '',
 	'PirateAttack': ':pirate_flag:',
 	'CivilUnrest': '',
 	'Bust': 'bust',
 	'Election': '',
 	'Boom': 'boom',
 	'Expansion': 'expansion',
+	'Retreat': 'retreat',
 	'CivilLiberty': '',
+	'Outbreak': ':biohazard:',
+	'Famine': '',
+	'Drought': '',
+	'NaturalDisaster': '',
+	'PublicHoliday': '',
 }
 const conflict_types = {
 	'war': ':umop:',
