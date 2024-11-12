@@ -1,11 +1,12 @@
 import { formatNumber } from '@angular/common';
-import { Pipe, PipeTransform, LOCALE_ID, inject } from '@angular/core';
+import { Pipe, PipeTransform, LOCALE_ID, Inject } from '@angular/core';
 
 @Pipe({
 	name: 'distance'
 })
 export class DistancePipe implements PipeTransform {
-	private _locale = inject(LOCALE_ID);
+
+	constructor(@Inject(LOCALE_ID) private _locale: string) {}
 
 
 	transform(value: unknown, ...args: unknown[]): unknown {
