@@ -5,11 +5,18 @@ import { JournalEventListService } from './journal-event-list/journal-event-list
 import { MiningEventListService } from './mining-event-list/mining-event-list.service';
 import { PoiNavigationService } from './poi-navigation/poi-navigation.service';
 import { SystemInfoService } from './system-info/system-info.service';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.less'],
+	standalone: true,
+	imports: [
+		RouterLink,
+		RouterLinkActive,
+		RouterOutlet,
+	],
 })
 export class AppComponent {
   poiNavigationService = inject(PoiNavigationService);
