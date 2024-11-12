@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { PoiNavigationService } from '../poi-navigation.service';
 
 @Component({
@@ -7,8 +7,8 @@ import { PoiNavigationService } from '../poi-navigation.service';
 	styleUrls: ['./poi-navigation-list.component.less']
 })
 export class PoiNavigationListComponent implements OnInit {
+	service = inject(PoiNavigationService);
 
-	constructor(public service: PoiNavigationService) { }
 
 	ngOnInit(): void {
 	}

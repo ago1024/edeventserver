@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { ConfigService } from './config.service';
 import { JournalEvent } from './interfaces';
@@ -7,10 +7,12 @@ import { JournalEvent } from './interfaces';
 	providedIn: 'root'
 })
 export class EdEventService {
+	private configService = inject(ConfigService);
+
 	private subject$: Subject<JournalEvent>;
 	private websocket: WebSocket;
 
-	constructor(private configService: ConfigService) {
+	constructor() {
 		this.subject$ = new Subject<JournalEvent>();
 		this.configService.serverEndpoint$.subscribe((endpoint) => {
 			this.connect(endpoint);

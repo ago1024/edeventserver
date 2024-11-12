@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { PoiNavigationService } from './poi-navigation.service';
 
 @Component({
@@ -7,14 +7,14 @@ import { PoiNavigationService } from './poi-navigation.service';
 	styleUrls: ['./poi-navigation.component.less']
 })
 export class PoiNavigationComponent implements OnInit {
+	service = inject(PoiNavigationService);
+
 
 	poiName: string;
 
 	poiLon: number;
 
 	poiLat: number;
-
-	constructor(public service: PoiNavigationService) { }
 
 	addPoi(): void {
 		if (this.poiLon === undefined || this.poiLat === undefined || !this.service.location) {

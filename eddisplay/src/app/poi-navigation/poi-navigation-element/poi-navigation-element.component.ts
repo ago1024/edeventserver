@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, inject } from '@angular/core';
 import { NavigationStatus, PoiNavigationService, PointOfInterest, Location, CurrentLocation } from '../poi-navigation.service';
 
 @Component({
@@ -7,6 +7,8 @@ import { NavigationStatus, PoiNavigationService, PointOfInterest, Location, Curr
 	styleUrls: ['./poi-navigation-element.component.less']
 })
 export class PoiNavigationElementComponent implements OnInit, OnChanges {
+	private service = inject(PoiNavigationService);
+
 
 	@Input()
 	poi: PointOfInterest;
@@ -15,8 +17,6 @@ export class PoiNavigationElementComponent implements OnInit, OnChanges {
 	current: CurrentLocation;
 
 	status: NavigationStatus;
-
-	constructor(private service: PoiNavigationService) { }
 
 	ngOnInit(): void {
 	}

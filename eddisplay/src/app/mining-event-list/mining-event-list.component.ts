@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { JournalEvent } from '../interfaces';
 import { MiningEventListService } from './mining-event-list.service';
 
@@ -11,7 +11,9 @@ export class MiningEventListComponent implements OnInit {
 
 	miningEvents: JournalEvent[] = [];
 
-	constructor(service: MiningEventListService) {
+	constructor() {
+		const service = inject(MiningEventListService);
+
 		this.miningEvents = service.miningEvents;
 	}
 

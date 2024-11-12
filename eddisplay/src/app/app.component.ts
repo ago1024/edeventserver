@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ChatViewerService } from './chat-viewer/chat-viewer.service';
 import { CurrentTargetService } from './current-target/current-target.service';
 import { JournalEventListService } from './journal-event-list/journal-event-list.service';
@@ -12,14 +12,12 @@ import { SystemInfoService } from './system-info/system-info.service';
 	styleUrls: ['./app.component.less'],
 })
 export class AppComponent {
-  title = 'eddisplay';
+  poiNavigationService = inject(PoiNavigationService);
+  chatViewerService = inject(ChatViewerService);
+  journalEventListService = inject(JournalEventListService);
+  miningEventListService = inject(MiningEventListService);
+  currentTargetService = inject(CurrentTargetService);
+  systemInfoService = inject(SystemInfoService);
 
-  constructor(
-	public poiNavigationService: PoiNavigationService,
-	public chatViewerService: ChatViewerService,
-	public journalEventListService: JournalEventListService,
-	public miningEventListService: MiningEventListService,
-	public currentTargetService: CurrentTargetService,
-	public systemInfoService: SystemInfoService,
-  ) {};
+  title = 'eddisplay';;
 }

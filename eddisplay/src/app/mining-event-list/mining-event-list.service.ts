@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
@@ -7,10 +7,12 @@ import { JournalEvent } from '../interfaces';
 	providedIn: 'root'
 })
 export class MiningEventListService {
+	private edEventService = inject(EdEventService);
+
 
 	miningEvents: JournalEvent[] = [];
 
-	constructor(private edEventService: EdEventService) {
+	constructor() {
 		this.edEventService.events$
 			.pipe(
 				filter(event => {

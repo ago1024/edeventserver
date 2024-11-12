@@ -1,5 +1,5 @@
 /* eslint-disable quote-props */
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, EMPTY, of } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
@@ -102,7 +102,9 @@ export class SystemInfoService {
 		}),
 	);
 
-	constructor(eventService: EdEventService) {
+	constructor() {
+		const eventService = inject(EdEventService);
+
 		eventService.events$
 			.pipe(
 				switchMap(event => {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
@@ -7,10 +7,12 @@ import { JournalEvent } from '../interfaces';
 	providedIn: 'root'
 })
 export class JournalEventListService {
+	private edEventService = inject(EdEventService);
+
 
 	journalEvents: JournalEvent[] = [];
 
-	constructor(private edEventService: EdEventService) {
+	constructor() {
 		this.edEventService.events$
 			.pipe(filter(event => event.event !== 'Status'))
 			.subscribe((event: JournalEvent) => this.next(event));

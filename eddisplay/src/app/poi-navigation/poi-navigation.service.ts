@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
 import { filter } from 'rxjs/operators';
@@ -39,7 +39,9 @@ export class PoiNavigationService {
 	pois: PointOfInterest[] = [];
 	location: CurrentLocation;
 
-	constructor(eventService: EdEventService) {
+	constructor() {
+		const eventService = inject(EdEventService);
+
 		eventService.events$
 			.pipe(filter(event => event.event === 'Status'))
 			.subscribe(event => this.updateStatus(event as StatusEvent));

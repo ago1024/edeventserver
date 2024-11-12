@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SystemInfoService } from './system-info.service';
 
 @Component({
@@ -7,8 +7,8 @@ import { SystemInfoService } from './system-info.service';
 	styleUrls: ['./system-info.component.less']
 })
 export class SystemInfoComponent implements OnInit {
+	service = inject(SystemInfoService);
 
-	constructor(public service: SystemInfoService) { }
 
 	ngOnInit(): void {
 	}

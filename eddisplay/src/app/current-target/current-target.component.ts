@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CurrentTargetService } from './current-target.service';
 
 @Component({
@@ -7,9 +7,8 @@ import { CurrentTargetService } from './current-target.service';
 	styleUrls: ['./current-target.component.less']
 })
 export class CurrentTargetComponent implements OnInit {
+	service = inject(CurrentTargetService);
 
-	constructor(public service: CurrentTargetService) {
-	}
 
 	ngOnInit(): void {
 	}

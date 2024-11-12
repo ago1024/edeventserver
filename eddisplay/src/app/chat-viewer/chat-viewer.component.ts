@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ChatViewerService } from './chat-viewer.service';
 
 @Component({
@@ -7,9 +7,8 @@ import { ChatViewerService } from './chat-viewer.service';
 	styleUrls: ['./chat-viewer.component.less'],
 })
 export class ChatViewerComponent implements OnInit {
+	service = inject(ChatViewerService);
 
-	constructor(public service: ChatViewerService) {
-	}
 
 	ngOnInit(): void {
 	}
