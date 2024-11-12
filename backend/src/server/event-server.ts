@@ -1,7 +1,7 @@
 import { JournalEvent } from "../services/journal-service/events";
 import { JournalService } from "../services/journal-service/journal-service";
 
-import WebSocket = require("ws");
+import WebSocket from "ws";
 import { CommanderService } from "../services/journal-service/commander-service";
 import { concat, NextObserver } from "rxjs";
 
@@ -47,9 +47,9 @@ export class EventServer {
 		});
 
 		this._journal.journal.subscribe({
-			next: (event: JournalEvent) => {
-				//console.log(event);
-			},
+			// next: (event: JournalEvent) => {
+			// 	console.log(event);
+			// },
 			error: (error: Error) => {
 				console.error(error);
 			}

@@ -1,8 +1,8 @@
 import { Observable, Subscriber } from "rxjs";
 
-import fs = require("fs");
-import path = require("path");
-import debug = require('debug');
+import fs from "fs";
+import path from "path";
+import debug from 'debug';
 
 const log = debug('edes:journal:log');
 

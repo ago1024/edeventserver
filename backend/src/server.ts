@@ -1,7 +1,7 @@
 
-import * as express from 'express';
-import * as http from 'http';
-import * as path from 'path';
+import express from 'express';
+import http from 'http';
+import path from 'path';
 import { AddressInfo } from 'net';
 import { EventServer } from './server/event-server';
 

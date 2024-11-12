@@ -4,10 +4,10 @@ import { service as saveFileService } from "../savefile-discovery-service";
 import { JournalEvent } from "./events";
 import { FsWatcherService } from "./fs-watcher";
 
-import fs = require("fs");
-import path = require("path");
-import readline = require("readline");
-import debug = require('debug');
+import fs from "fs";
+import path from "path";
+import readline from "readline";
+import debug from 'debug';
 
 const log = debug('edes:journal:log');
 
@@ -170,7 +170,6 @@ export class JournalFileObservable extends Observable<JournalFileEntry> {
 		const match1 = name.match(re);
 		const match2 = name.match(re2);
 
-		let ts;
 		if (match1) {
 			const date = `20${match1[1]}-${match1[2]}-${match1[3]}T${match1[4]}:${match1[5]}:${match1[6]}`;
 			return this.parseJournalFileEntryTimestamp(name, folder, date, match1[7]);

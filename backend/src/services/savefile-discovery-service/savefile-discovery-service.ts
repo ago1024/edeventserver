@@ -1,7 +1,7 @@
-import path = require("path");
-import os = require("os");
-import fs = require("fs");
-import debug = require('debug');
+import path from "path";
+import os from "os";
+import fs from "fs";
+import debug from 'debug';
 
 const log = debug('edes:savefilediscovery:log');
 

@@ -1,4 +1,4 @@
-import { Observable, Observer, ReplaySubject } from "rxjs";
+import { Observable, ReplaySubject } from "rxjs";
 import { JournalEvent } from "./events";
 import { JournalService } from "./journal-service";
 
