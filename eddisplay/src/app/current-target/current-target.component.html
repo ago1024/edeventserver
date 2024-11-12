@@ -1,17 +1,16 @@
-<ng-container *ngIf="service.target; let target">
+@if (service.target; as target) {
 	<h1>
 		{{target.Ship_Localised || target.Ship}} &middot; {{target.PilotRank}}
 	</h1>
 	<p>{{target.PilotName_Localised}}</p>
 	<p>{{target.Faction}}</p>
-	<p>{{target.LegalStatus}} <span *ngIf="target.Bounty"> &middot; {{target.Bounty}} CR</span></p>
+	<p>{{target.LegalStatus}} @if (target.Bounty) { &middot; {{target.Bounty}} CR }</p>
 	<p>Shield {{target.ShieldHealth * 0.01 | percent: '3.0-2' }} &middot; Hull {{target.HullHealth * 0.01 | percent: '3.0-2' }}</p>
-	
 	<!--<app-journal-event [journalEvent]="target"></app-journal-event>-->
-</ng-container>
-<ng-container *ngIf="!service.target">
+}
+@if (!service.target) {
 	<h1>
 		No target
 	</h1>
-</ng-container>
+}
 

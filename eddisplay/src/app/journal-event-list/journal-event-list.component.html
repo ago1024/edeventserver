@@ -1,6 +1,8 @@
 <h1>Journal</h1>
 <ul>
-	<li *ngFor="let journalEvent of journalEvents">
-		<app-journal-event [journalEvent]="journalEvent"></app-journal-event>
-	</li>
+	@for (journalEvent of journalEvents; track journalEvent) {
+		<li>
+			<app-journal-event [journalEvent]="journalEvent"></app-journal-event>
+		</li>
+	}
 </ul>

@@ -1,6 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { PoiNavigationService } from './poi-navigation.service';
-import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PoiNavigationListComponent } from './poi-navigation-list/poi-navigation-list.component';
 
@@ -9,7 +8,7 @@ import { PoiNavigationListComponent } from './poi-navigation-list/poi-navigation
 	templateUrl: './poi-navigation.component.html',
 	styleUrls: ['./poi-navigation.component.less'],
 	standalone: true,
-	imports: [NgIf, FormsModule, PoiNavigationListComponent]
+	imports: [FormsModule, PoiNavigationListComponent]
 })
 export class PoiNavigationComponent implements OnInit {
 	service = inject(PoiNavigationService);

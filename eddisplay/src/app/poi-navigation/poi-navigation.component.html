@@ -2,13 +2,15 @@
 
 <p>
 	Current location:
-	<span class="text-upper" *ngIf="service.location">
-		{{service.location.BodyName}}
-		({{service.location.Latitude}}, {{service.location.Longitude}})
-	</span>
-	<span *ngIf="!service.location">
+	@if (service.location) {
+		<span class="text-upper">
+			{{service.location.BodyName}}
+			({{service.location.Latitude}}, {{service.location.Longitude}})
+		</span>
+	}
+	@if (!service.location) {
 		Unknown
-	</span>
+	}
 </p>
 
 <p>Add POI</p>

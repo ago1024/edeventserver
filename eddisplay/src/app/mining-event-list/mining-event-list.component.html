@@ -1,6 +1,8 @@
 <h1>Mining</h1>
 <ul>
-	<li *ngFor="let miningEvent of miningEvents">
-		<app-mining-event [miningEvent]="miningEvent"></app-mining-event>
-	</li>
+	@for (miningEvent of miningEvents; track miningEvent) {
+		<li>
+			<app-mining-event [miningEvent]="miningEvent"></app-mining-event>
+		</li>
+	}
 </ul>

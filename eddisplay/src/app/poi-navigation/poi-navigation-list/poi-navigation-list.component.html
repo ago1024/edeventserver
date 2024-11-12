@@ -1,8 +1,10 @@
 <ul>
-	<li *ngFor="let poi of service.pois">
-		<div>
-			<app-poi-navigation-element [poi]="poi" [current]="service.location"></app-poi-navigation-element>
-			<button (click)="service.removePointOfInterest(poi)">X</button>
-		</div>
-	</li>
+	@for (poi of service.pois; track poi) {
+		<li>
+			<div>
+				<app-poi-navigation-element [poi]="poi" [current]="service.location"></app-poi-navigation-element>
+				<button (click)="service.removePointOfInterest(poi)">X</button>
+			</div>
+		</li>
+	}
 </ul>

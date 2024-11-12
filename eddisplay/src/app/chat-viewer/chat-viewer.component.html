@@ -1,6 +1,8 @@
 <h1>Chat</h1>
 <ul>
-	<li *ngFor="let chatEvent of service.chatEvents">
-		<app-chat-entry [chatEvent]="chatEvent"></app-chat-entry>
-	</li>
+	@for (chatEvent of service.chatEvents; track chatEvent) {
+		<li>
+			<app-chat-entry [chatEvent]="chatEvent"></app-chat-entry>
+		</li>
+	}
 </ul>
