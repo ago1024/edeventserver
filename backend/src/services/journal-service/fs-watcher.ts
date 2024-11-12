@@ -22,15 +22,13 @@ class FsWatcherObservable extends Observable<FileChangeEvent> {
 						return this.renameEvent(subscriber, filename);
 					case "change":
 						return this.changeEvent(subscriber, filename);
-					case "close":
-						subscriber.complete();
-						break;
 					default:
 						log.log(`Unknown event type ${eventType}`);
 				}
 			});
 			return () => {
 				watcher.close();
+				subscriber.complete();
 			}
 		});
 	}
