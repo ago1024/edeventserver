@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ChatViewerComponent } from './chat-viewer/chat-viewer.component';
-import { CurrentTargetComponent } from './current-target/current-target.component';
-import { JournalEventListComponent } from './journal-event-list/journal-event-list.component';
-import { MiningEventListComponent } from './mining-event-list/mining-event-list.component';
-import { PoiNavigationComponent } from './poi-navigation/poi-navigation.component';
-import { SystemInfoComponent } from './system-info/system-info.component';
+
+
+
+
+
+
 
 const routes: Routes = [
-	{path: 'journal', component: JournalEventListComponent},
-	{path: 'target', component: CurrentTargetComponent},
-	{path: 'poi', component: PoiNavigationComponent},
-	{path: 'mining', component: MiningEventListComponent},
-	{path: 'chat', component: ChatViewerComponent},
-	{path: 'sysinfo', component: SystemInfoComponent},
+	{path: 'journal', loadComponent: () => import('./journal-event-list/journal-event-list.component').then(m => m.JournalEventListComponent)},
+	{path: 'target', loadComponent: () => import('./current-target/current-target.component').then(m => m.CurrentTargetComponent)},
+	{path: 'poi', loadComponent: () => import('./poi-navigation/poi-navigation.component').then(m => m.PoiNavigationComponent)},
+	{path: 'mining', loadComponent: () => import('./mining-event-list/mining-event-list.component').then(m => m.MiningEventListComponent)},
+	{path: 'chat', loadComponent: () => import('./chat-viewer/chat-viewer.component').then(m => m.ChatViewerComponent)},
+	{path: 'sysinfo', loadComponent: () => import('./system-info/system-info.component').then(m => m.SystemInfoComponent)},
 	{path: '**', redirectTo: '/journal' },
 ];
 
