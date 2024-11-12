@@ -16,6 +16,7 @@ describe('ChatEntryComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ChatEntryComponent);
 		component = fixture.componentInstance;
+		component.chatEvent = { event: 'ReceiveText', timestamp: new Date().toISOString() };
 		fixture.detectChanges();
 	});
 

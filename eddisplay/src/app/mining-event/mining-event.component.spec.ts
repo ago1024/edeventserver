@@ -16,6 +16,7 @@ describe('MiningEventComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MiningEventComponent);
     component = fixture.componentInstance;
+    component.miningEvent = { event: 'Cargo', timestamp: new Date().toISOString() };
     fixture.detectChanges();
   });
 

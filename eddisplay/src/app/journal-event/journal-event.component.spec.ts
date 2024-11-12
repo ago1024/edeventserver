@@ -16,6 +16,7 @@ describe('JournalEventComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(JournalEventComponent);
 		component = fixture.componentInstance;
+		component.journalEvent = { event: 'Cargo', timestamp: new Date().toISOString() };
 		fixture.detectChanges();
 	});
 
