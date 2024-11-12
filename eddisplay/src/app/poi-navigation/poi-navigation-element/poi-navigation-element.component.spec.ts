@@ -25,7 +25,7 @@ describe('PoiNavigationElementComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ PoiNavigationElementComponent, TestHostComponent, DistancePipe ]
+			imports: [TestHostComponent]
 		})
 			.compileComponents();
 	});
@@ -60,7 +60,9 @@ describe('PoiNavigationElementComponent', () => {
 
 	@Component({
 		selector: 'app-host-component',
-		template: `<app-poi-navigation-element [poi]="poi" [current]="current"></app-poi-navigation-element>`
+		template: `<app-poi-navigation-element [poi]="poi" [current]="current"></app-poi-navigation-element>`,
+		imports: [PoiNavigationElementComponent],
+		standalone: true
 	})
 	class TestHostComponent {
 		public poi: PointOfInterest = poi;

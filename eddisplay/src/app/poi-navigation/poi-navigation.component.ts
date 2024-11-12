@@ -1,10 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { PoiNavigationService } from './poi-navigation.service';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { PoiNavigationListComponent } from './poi-navigation-list/poi-navigation-list.component';
 
 @Component({
 	selector: 'app-poi-navigation',
 	templateUrl: './poi-navigation.component.html',
-	styleUrls: ['./poi-navigation.component.less']
+	styleUrls: ['./poi-navigation.component.less'],
+	standalone: true,
+	imports: [NgIf, FormsModule, PoiNavigationListComponent]
 })
 export class PoiNavigationComponent implements OnInit {
 	service = inject(PoiNavigationService);
@@ -32,7 +37,7 @@ export class PoiNavigationComponent implements OnInit {
 		this.poiLat = undefined;
 	}
 
-	addCurrentLocation():void {
+	addCurrentLocation(): void {
 		this.service.addPointOfInterest({
 			Name: this.poiName || new Date().toISOString(),
 			Longitude: this.service.location.Longitude,

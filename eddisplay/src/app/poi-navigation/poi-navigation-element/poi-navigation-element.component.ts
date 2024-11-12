@@ -1,10 +1,14 @@
 import { Component, Input, OnChanges, OnInit, inject } from '@angular/core';
 import { NavigationStatus, PoiNavigationService, PointOfInterest, Location, CurrentLocation } from '../poi-navigation.service';
+import { NgIf, DecimalPipe } from '@angular/common';
+import { DistancePipe } from '../../distance.pipe';
 
 @Component({
 	selector: 'app-poi-navigation-element',
 	templateUrl: './poi-navigation-element.component.html',
-	styleUrls: ['./poi-navigation-element.component.less']
+	styleUrls: ['./poi-navigation-element.component.less'],
+	standalone: true,
+	imports: [NgIf, DecimalPipe, DistancePipe]
 })
 export class PoiNavigationElementComponent implements OnInit, OnChanges {
 	private service = inject(PoiNavigationService);

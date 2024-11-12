@@ -17,7 +17,7 @@ describe('PoiNavigationListComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ PoiNavigationListComponent ]
+			imports: [PoiNavigationListComponent]
 		})
 			.compileComponents();
 	});
@@ -34,13 +34,13 @@ describe('PoiNavigationListComponent', () => {
 	});
 
 	it('should show pois', () => {
-		service.pois = [{...poi}, {...poi}];
+		service.pois = [{ ...poi }, { ...poi }];
 		fixture.detectChanges();
 		expect(fixture.nativeElement.querySelectorAll('li').length).toBe(2);
 	});
 
 	it('should remove a poi', () => {
-		service.pois = [{...poi}, {...poi}];
+		service.pois = [{ ...poi }, { ...poi }];
 		fixture.detectChanges();
 		fixture.nativeElement.querySelector('button').click();
 		expect(service.pois.length).toBe(1);

@@ -18,8 +18,11 @@ import { SystemInfoComponent } from './system-info/system-info.component';
 
 
 @NgModule({
-	declarations: [
-		AppComponent,
+	declarations: [AppComponent],
+	imports: [
+		BrowserModule,
+		FormsModule,
+		AppRoutingModule,
 		JournalEventListComponent,
 		JournalEventComponent,
 		CurrentTargetComponent,
@@ -31,12 +34,7 @@ import { SystemInfoComponent } from './system-info/system-info.component';
 		MiningEventComponent,
 		ChatEntryComponent,
 		ChatViewerComponent,
-		SystemInfoComponent,
-	],
-	imports: [
-		BrowserModule,
-		FormsModule,
-		AppRoutingModule
+		SystemInfoComponent
 	],
 	providers: [],
 	bootstrap: [AppComponent]

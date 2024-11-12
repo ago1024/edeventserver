@@ -8,8 +8,8 @@ describe('MiningEventComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MiningEventComponent ]
-    })
+    imports: [MiningEventComponent]
+})
     .compileComponents();
   });
 

@@ -8,8 +8,8 @@ describe('ChatViewerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChatViewerComponent ]
-    })
+    imports: [ChatViewerComponent]
+})
     .compileComponents();
   });
 

@@ -8,9 +8,9 @@ describe('MiningEventListComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ MiningEventListComponent ]
+			imports: [MiningEventListComponent]
 		})
-		.compileComponents();
+			.compileComponents();
 	});
 
 	beforeEach(() => {

@@ -8,9 +8,9 @@ describe('SystemInfoComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ SystemInfoComponent ]
+			imports: [SystemInfoComponent]
 		})
-		.compileComponents();
+			.compileComponents();
 	});
 
 	beforeEach(() => {

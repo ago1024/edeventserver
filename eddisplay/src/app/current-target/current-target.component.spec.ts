@@ -8,7 +8,7 @@ describe('CurrentTargetComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ CurrentTargetComponent ]
+			imports: [CurrentTargetComponent]
 		})
 			.compileComponents();
 	});

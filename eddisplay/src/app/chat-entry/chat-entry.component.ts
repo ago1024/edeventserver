@@ -1,10 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { JournalEvent } from '../interfaces';
+import { JsonPipe } from '@angular/common';
 
 @Component({
 	selector: 'app-chat-entry',
 	templateUrl: './chat-entry.component.html',
-	styleUrls: ['./chat-entry.component.less']
+	styleUrls: ['./chat-entry.component.less'],
+	standalone: true,
+	imports: [JsonPipe]
 })
 export class ChatEntryComponent implements OnInit {
 

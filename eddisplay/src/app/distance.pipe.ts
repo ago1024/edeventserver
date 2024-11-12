@@ -2,7 +2,8 @@ import { formatNumber } from '@angular/common';
 import { Pipe, PipeTransform, LOCALE_ID, Inject } from '@angular/core';
 
 @Pipe({
-	name: 'distance'
+	name: 'distance',
+	standalone: true
 })
 export class DistancePipe implements PipeTransform {
 
