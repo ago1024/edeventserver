@@ -48,7 +48,7 @@ export class EventServer {
 
 		this._journal.journal.subscribe({
 			next: (event: JournalEvent) => {
-				console.log(event);
+				//console.log(event);
 			},
 			error: (error: Error) => {
 				console.error(error);
