@@ -3,7 +3,7 @@ import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
 import { filter } from 'rxjs/operators';
 
-import * as sample from './poi-navigation.service.sample.json';
+import sample from './poi-navigation.service.sample.json';
 import { environment } from 'src/environments/environment';
 
 export interface Location {
