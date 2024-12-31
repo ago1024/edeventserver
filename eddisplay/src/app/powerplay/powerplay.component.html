@@ -1,0 +1,15 @@
+<h1>Powerplay</h1>
+
+@if ((events$ | async)?.[0]; as event) {
+	<span class="text-upper">Power:</span> {{ event.Power }}
+	<span class="text-upper">Rank:</span> {{ event.Rank }}
+}
+
+<ul>
+	@for (event of events$ | async; track $index) {
+		<li>
+			<p><span class="text-upper">Merits:</span> {{ event.Merits }} - {{ event.timestamp }}</p>
+
+		</li>
+	}
+</ul>
