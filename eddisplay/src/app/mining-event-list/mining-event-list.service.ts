@@ -1,7 +1,46 @@
 import { Injectable, inject } from '@angular/core';
-import { filter } from 'rxjs/operators';
+import { filter, map, scan, shareReplay, startWith, withLatestFrom } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
+import { JournalEventComponent } from '../journal-event/journal-event.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
+
+export interface LoadoutEvent extends JournalEvent {
+	event: 'Loadout';
+	CargoCapacity: number;
+}
+
+export interface CargoEvent extends JournalEvent {
+	event: 'Cargo';
+	Vessel: string;
+	Count: number;
+}
+
+export interface LoadoutEvent extends JournalEvent {
+	event: 'Loadout';
+	Modules: {
+		Slot: string;
+		Item: string;
+	}[];
+}
+
+export interface ProspectedAsteroidEvent extends JournalEvent {
+	event: 'ProspectedAsteroid';
+	Matetrials: {
+		Name: string;
+		Proportion: number;
+	}[];
+	MotherlodeMaterial?: string;
+	Content: string;
+	Content_Localised: string;
+	'Material Content': string;
+	Remaining: number;
+}
+
+const PROSPECTOR_COUNT = {
+	int_dronecontrol_prospector_size3_class5: 2,
+}
 
 @Injectable({
 	providedIn: 'root'
@@ -9,6 +48,39 @@ import { JournalEvent } from '../interfaces';
 export class MiningEventListService {
 	private edEventService = inject(EdEventService);
 
+	public readonly cargoCapacity$ = this.edEventService.events$.pipe(
+		takeUntilDestroyed(),
+		filter((event): event is LoadoutEvent => event.event === 'Loadout'),
+		filter(event => event.CargoCapacity != undefined),
+		map(event => event.CargoCapacity),
+		shareReplay(1),
+	);
+
+	public readonly cargoCount$ = this.edEventService.events$.pipe(
+		takeUntilDestroyed(),
+		filter((event): event is CargoEvent => event.event === 'Cargo'),
+		filter(event => event.Count != undefined && event.Vessel === 'Ship'),
+		map(event => event.Count),
+		shareReplay(1),
+	);
+
+	private readonly prospectorLimpetCount$ = this.edEventService.events$.pipe(
+		filter((event): event is LoadoutEvent => event.event === 'Loadout'),
+		map(event => (event.Modules ?? []).reduce((count, module) => count + (PROSPECTOR_COUNT[module.Item] ?? 0), 0)),
+		startWith(0),
+	);
+
+	public readonly lastProspected$ = this.edEventService.events$.pipe(
+		takeUntilDestroyed(),
+		filter((event): event is ProspectedAsteroidEvent => event.event === 'ProspectedAsteroid'),
+		withLatestFrom(this.prospectorLimpetCount$),
+		scan((acc, [event, prospectorCount]) => [event, ...acc].slice(0, prospectorCount), [] as ProspectedAsteroidEvent[]),
+		shareReplay(1),
+	);
+	private readonly subscription = new Subscription()
+		.add(this.lastProspected$.subscribe())
+		.add(this.cargoCount$.subscribe())
+		.add(this.cargoCapacity$.subscribe());
 
 	miningEvents: JournalEvent[] = [];
 

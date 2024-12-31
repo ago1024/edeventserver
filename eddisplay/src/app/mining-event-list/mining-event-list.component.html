@@ -1,8 +1,31 @@
 <h1>Mining</h1>
-<ul>
-	@for (miningEvent of miningEvents; track miningEvent) {
-		<li>
-			<app-mining-event [miningEvent]="miningEvent"></app-mining-event>
-		</li>
-	}
-</ul>
+<span class="text-upper">Cargo:</span> {{ service.cargoCount$ | async }}/{{ service.cargoCapacity$ | async }}
+
+@if (service.lastProspected$ | async; as lastProspected) {
+	<h3>Prospected</h3>
+	<div class="last-prospected">
+		@for (miningEvent of lastProspected; track miningEvent) {
+			<div>
+				<ul>
+					@for (material of miningEvent.Materials; track material) {
+						<li><span class="text-capitalize">{{ material.Name }}</span>: {{ material.Proportion / 100.0 | percent: '1.2-2' }}</li>
+					}
+				</ul>
+				@if (miningEvent.MotherlodeMaterial) {
+					Motherlode: <span class="text-capitalize">{{miningEvent.MotherlodeMaterial}}</span>
+				}
+			</div>
+		}
+	</div>
+}
+
+@if (service.miningEvents) {
+	<h3>Events</h3>
+	<ul>
+		@for (miningEvent of miningEvents; track miningEvent) {
+			<li>
+				<app-mining-event [miningEvent]="miningEvent"></app-mining-event>
+			</li>
+		}
+	</ul>
+}
