@@ -28,5 +28,5 @@ export class AppComponent {
   systemInfoService = inject(SystemInfoService);
   powerplayService = inject(PowerplayService);
 
-  title = 'eddisplay';;
+  title = 'eddisplay';
 }
