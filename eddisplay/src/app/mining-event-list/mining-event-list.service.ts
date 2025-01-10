@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { filter, map, scan, shareReplay, startWith, withLatestFrom } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
-import { JournalEventComponent } from '../journal-event/journal-event.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 
@@ -70,13 +69,17 @@ export class MiningEventListService {
 		startWith(0),
 	);
 
-	public readonly lastProspected$ = this.edEventService.events$.pipe(
+	public readonly prospected$ = this.edEventService.events$.pipe(
 		takeUntilDestroyed(),
 		filter((event): event is ProspectedAsteroidEvent => event.event === 'ProspectedAsteroid'),
+	);
+
+	public readonly lastProspected$ = this.prospected$.pipe(
 		withLatestFrom(this.prospectorLimpetCount$),
 		scan((acc, [event, prospectorCount]) => [event, ...acc].slice(0, prospectorCount), [] as ProspectedAsteroidEvent[]),
 		shareReplay(1),
 	);
+
 	private readonly subscription = new Subscription()
 		.add(this.lastProspected$.subscribe())
 		.add(this.cargoCount$.subscribe())

@@ -1,6 +1,9 @@
 <h1>Mining</h1>
 <span class="text-upper">Cargo:</span> {{ service.cargoCount$ | async }}/{{ service.cargoCapacity$ | async }}
 
+<p>
+	<input type="checkbox" (change)="this.soundEnabled.set($event.target.checked)">Announce motherlodes
+</p>
 @if (service.lastProspected$ | async; as lastProspected) {
 	<h3>Prospected</h3>
 	<div class="last-prospected">

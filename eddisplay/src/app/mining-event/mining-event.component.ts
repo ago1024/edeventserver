@@ -9,14 +9,11 @@ import { JsonPipe } from '@angular/common';
 	standalone: true,
 	imports: [JsonPipe],
 })
-export class MiningEventComponent implements OnInit {
+export class MiningEventComponent {
 
 	@Input()
 	miningEvent: JournalEvent;
 
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 }
