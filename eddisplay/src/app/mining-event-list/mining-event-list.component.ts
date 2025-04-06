@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { MiningEventComponent } from '../mining-event/mining-event.component';
 import { MiningEventListService } from './mining-event-list.service';
-import { AsyncPipe, DecimalPipe, PercentPipe } from '@angular/common';
+import { AsyncPipe, PercentPipe } from '@angular/common';
 import { filter, tap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -9,10 +9,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 	selector: 'app-mining-event-list',
 	templateUrl: './mining-event-list.component.html',
 	styleUrls: ['./mining-event-list.component.less'],
-	standalone: true,
 	imports: [
 		AsyncPipe,
-		DecimalPipe,
 		PercentPipe,
 		MiningEventComponent
 	],

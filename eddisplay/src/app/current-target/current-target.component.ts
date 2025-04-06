@@ -6,7 +6,6 @@ import { PercentPipe } from '@angular/common';
 	selector: 'app-current-target',
 	templateUrl: './current-target.component.html',
 	styleUrls: ['./current-target.component.less'],
-	standalone: true,
 	imports: [PercentPipe]
 })
 export class CurrentTargetComponent implements OnInit {

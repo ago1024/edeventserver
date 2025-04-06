@@ -6,7 +6,6 @@ import { JsonPipe } from '@angular/common';
 	selector: 'app-chat-entry',
 	templateUrl: './chat-entry.component.html',
 	styleUrls: ['./chat-entry.component.less'],
-	standalone: true,
 	imports: [JsonPipe]
 })
 export class ChatEntryComponent implements OnInit {

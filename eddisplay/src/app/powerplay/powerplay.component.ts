@@ -1,14 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { PowerplayService } from './powerplay.service';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { map, scan } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-powerplay',
-	standalone: true,
 	imports: [
 		AsyncPipe,
-		JsonPipe,
 	],
 	templateUrl: './powerplay.component.html',
 	styleUrl: './powerplay.component.less'

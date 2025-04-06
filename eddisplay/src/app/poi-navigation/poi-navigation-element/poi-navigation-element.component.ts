@@ -7,7 +7,6 @@ import { DistancePipe } from '../../distance.pipe';
 	selector: 'app-poi-navigation-element',
 	templateUrl: './poi-navigation-element.component.html',
 	styleUrls: ['./poi-navigation-element.component.less'],
-	standalone: true,
 	imports: [DecimalPipe, DistancePipe]
 })
 export class PoiNavigationElementComponent implements OnInit, OnChanges {

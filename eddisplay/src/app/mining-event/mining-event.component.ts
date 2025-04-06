@@ -6,7 +6,6 @@ import { JsonPipe } from '@angular/common';
 	selector: 'app-mining-event',
 	templateUrl: './mining-event.component.html',
 	styleUrls: ['./mining-event.component.less'],
-	standalone: true,
 	imports: [JsonPipe],
 })
 export class MiningEventComponent {

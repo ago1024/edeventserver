@@ -6,7 +6,6 @@ import { AsyncPipe } from '@angular/common';
 	selector: 'app-system-info',
 	templateUrl: './system-info.component.html',
 	styleUrls: ['./system-info.component.less'],
-	standalone: true,
 	imports: [AsyncPipe]
 })
 export class SystemInfoComponent implements OnInit {

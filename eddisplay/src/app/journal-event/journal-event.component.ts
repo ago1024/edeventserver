@@ -6,7 +6,6 @@ import { JsonPipe } from '@angular/common';
 	selector: 'app-journal-event',
 	templateUrl: './journal-event.component.html',
 	styleUrls: ['./journal-event.component.less'],
-	standalone: true,
 	imports: [JsonPipe]
 })
 export class JournalEventComponent implements OnInit {

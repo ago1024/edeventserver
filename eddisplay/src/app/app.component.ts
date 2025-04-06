@@ -12,7 +12,6 @@ import { PowerplayService } from './powerplay/powerplay.service';
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.less'],
-	standalone: true,
 	imports: [
 		RouterLink,
 		RouterLinkActive,

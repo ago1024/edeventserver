@@ -6,7 +6,6 @@ import { ChatEntryComponent } from '../chat-entry/chat-entry.component';
 	selector: 'app-chat-viewer',
 	templateUrl: './chat-viewer.component.html',
 	styleUrls: ['./chat-viewer.component.less'],
-	standalone: true,
 	imports: [ChatEntryComponent],
 })
 export class ChatViewerComponent implements OnInit {

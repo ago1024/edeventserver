@@ -6,7 +6,6 @@ import { PoiNavigationElementComponent } from '../poi-navigation-element/poi-nav
 	selector: 'app-poi-navigation-list',
 	templateUrl: './poi-navigation-list.component.html',
 	styleUrls: ['./poi-navigation-list.component.less'],
-	standalone: true,
 	imports: [PoiNavigationElementComponent]
 })
 export class PoiNavigationListComponent implements OnInit {

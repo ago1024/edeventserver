@@ -62,7 +62,6 @@ describe('PoiNavigationElementComponent', () => {
 		selector: 'app-host-component',
 		template: `<app-poi-navigation-element [poi]="poi" [current]="current"></app-poi-navigation-element>`,
 		imports: [PoiNavigationElementComponent],
-		standalone: true
 	})
 	class TestHostComponent {
 		public poi: PointOfInterest = poi;

@@ -7,7 +7,6 @@ import { JournalEventComponent } from '../journal-event/journal-event.component'
 	selector: 'app-journal-event-list',
 	templateUrl: './journal-event-list.component.html',
 	styleUrls: ['./journal-event-list.component.less'],
-	standalone: true,
 	imports: [JournalEventComponent]
 })
 export class JournalEventListComponent implements OnInit {
