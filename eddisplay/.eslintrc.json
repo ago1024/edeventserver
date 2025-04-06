@@ -1,5 +1,8 @@
 {
   "root": true,
+  "plugins": [
+    "@stylistic"
+  ],
   "overrides": [
     {
       "files": [
@@ -15,20 +18,14 @@
         "plugin:@angular-eslint/recommended"
       ],
       "rules": {
-        "indent": [
+        "@stylistic/indent": [
           "warn",
           "tab",
           {
             "SwitchCase": 1
           }
         ],
-        "max-len": [
-          "error",
-          {
-            "code": 200
-          }
-        ],
-        "no-trailing-spaces": "error",
+        "@stylistic/no-trailing-spaces": "error",
         "@angular-eslint/directive-selector": [
           "error",
           {

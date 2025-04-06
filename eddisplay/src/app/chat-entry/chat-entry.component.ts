@@ -11,7 +11,7 @@ import { JsonPipe } from '@angular/common';
 export class ChatEntryComponent {
 
 	@Input()
-		chatEvent: JournalEvent;
+	chatEvent: JournalEvent;
 
 	constructor() { }
 
