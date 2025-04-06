@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { filter, map, scan, shareReplay, startWith, withLatestFrom } from 'rxjs/operators';
+import { buffer, filter, map, scan, shareReplay, startWith, tap, withLatestFrom } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -80,7 +80,19 @@ export class MiningEventListService {
 		shareReplay(1),
 	);
 
+	public readonly motherlodeCounter$ = this.prospected$.pipe(
+		filter(event => !!event.MotherlodeMaterial),
+		buffer(this.edEventService.events$.pipe(filter(event => ['LoadGame', 'SupercruiseExit', 'SupercruiseEntry', 'FSDJump'].includes(event.event)))),
+		filter(events => events.length > 0),
+		map(events => events.reduce((acc, event) => {
+			acc[event.MotherlodeMaterial] = 1 + (acc[event.MotherlodeMaterial] ?? 0);
+			return acc;
+		}, {})),
+		tap(events => console.log(events)),
+	);
+
 	private readonly subscription = new Subscription()
+		.add(this.motherlodeCounter$.subscribe())
 		.add(this.lastProspected$.subscribe())
 		.add(this.cargoCount$.subscribe())
 		.add(this.cargoCapacity$.subscribe());
