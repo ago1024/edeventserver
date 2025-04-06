@@ -1,4 +1,3 @@
-/* eslint-disable quote-props */
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, EMPTY, of } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
