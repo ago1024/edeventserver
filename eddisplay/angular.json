@@ -41,6 +41,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/eddisplay/",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
