@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { JournalEvent } from '../interfaces';
 import { JournalEventListService } from './journal-event-list.service';
 import { JournalEventComponent } from '../journal-event/journal-event.component';
@@ -9,7 +9,7 @@ import { JournalEventComponent } from '../journal-event/journal-event.component'
 	styleUrls: ['./journal-event-list.component.less'],
 	imports: [JournalEventComponent]
 })
-export class JournalEventListComponent implements OnInit {
+export class JournalEventListComponent {
 
 	journalEvents: JournalEvent[] = [];
 
@@ -17,9 +17,6 @@ export class JournalEventListComponent implements OnInit {
 		const service = inject(JournalEventListService);
 
 		this.journalEvents = service.journalEvents;
-	}
-
-	ngOnInit(): void {
 	}
 
 }

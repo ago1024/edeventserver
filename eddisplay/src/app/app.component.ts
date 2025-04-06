@@ -19,13 +19,13 @@ import { PowerplayService } from './powerplay/powerplay.service';
 	],
 })
 export class AppComponent {
-  poiNavigationService = inject(PoiNavigationService);
-  chatViewerService = inject(ChatViewerService);
-  journalEventListService = inject(JournalEventListService);
-  miningEventListService = inject(MiningEventListService);
-  currentTargetService = inject(CurrentTargetService);
-  systemInfoService = inject(SystemInfoService);
-  powerplayService = inject(PowerplayService);
+	poiNavigationService = inject(PoiNavigationService);
+	chatViewerService = inject(ChatViewerService);
+	journalEventListService = inject(JournalEventListService);
+	miningEventListService = inject(MiningEventListService);
+	currentTargetService = inject(CurrentTargetService);
+	systemInfoService = inject(SystemInfoService);
+	powerplayService = inject(PowerplayService);
 
-  title = 'eddisplay';
+	title = 'eddisplay';
 }

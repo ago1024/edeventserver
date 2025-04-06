@@ -9,7 +9,7 @@ import { PoiNavigationListComponent } from './poi-navigation-list/poi-navigation
 	styleUrls: ['./poi-navigation.component.less'],
 	imports: [FormsModule, PoiNavigationListComponent]
 })
-export class PoiNavigationComponent implements OnInit {
+export class PoiNavigationComponent {
 	service = inject(PoiNavigationService);
 
 
@@ -43,10 +43,6 @@ export class PoiNavigationComponent implements OnInit {
 			BodyName: this.service.location.BodyName,
 		});
 		this.poiName = undefined;
-	}
-
-
-	ngOnInit(): void {
 	}
 
 }

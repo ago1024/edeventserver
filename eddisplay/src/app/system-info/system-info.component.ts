@@ -8,11 +8,6 @@ import { AsyncPipe } from '@angular/common';
 	styleUrls: ['./system-info.component.less'],
 	imports: [AsyncPipe]
 })
-export class SystemInfoComponent implements OnInit {
+export class SystemInfoComponent {
 	service = inject(SystemInfoService);
-
-
-	ngOnInit(): void {
-	}
-
 }

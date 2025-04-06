@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { JournalEvent } from '../interfaces';
 import { JsonPipe } from '@angular/common';
 
@@ -8,14 +8,11 @@ import { JsonPipe } from '@angular/common';
 	styleUrls: ['./chat-entry.component.less'],
 	imports: [JsonPipe]
 })
-export class ChatEntryComponent implements OnInit {
+export class ChatEntryComponent {
 
 	@Input()
-	chatEvent: JournalEvent;
+		chatEvent: JournalEvent;
 
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 }

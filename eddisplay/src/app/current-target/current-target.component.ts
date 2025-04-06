@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CurrentTargetService } from './current-target.service';
 import { PercentPipe } from '@angular/common';
 
@@ -8,11 +8,6 @@ import { PercentPipe } from '@angular/common';
 	styleUrls: ['./current-target.component.less'],
 	imports: [PercentPipe]
 })
-export class CurrentTargetComponent implements OnInit {
+export class CurrentTargetComponent {
 	service = inject(CurrentTargetService);
-
-
-	ngOnInit(): void {
-	}
-
 }
