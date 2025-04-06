@@ -13,6 +13,4 @@ export class ChatEntryComponent {
 	@Input()
 	chatEvent: JournalEvent;
 
-	constructor() { }
-
 }

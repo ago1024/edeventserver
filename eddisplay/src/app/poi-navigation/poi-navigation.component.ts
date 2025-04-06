@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { PoiNavigationService } from './poi-navigation.service';
 import { FormsModule } from '@angular/forms';
 import { PoiNavigationListComponent } from './poi-navigation-list/poi-navigation-list.component';

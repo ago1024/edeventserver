@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, inject } from '@angular/core';
-import { NavigationStatus, PoiNavigationService, PointOfInterest, Location, CurrentLocation } from '../poi-navigation.service';
+import { NavigationStatus, PoiNavigationService, PointOfInterest, CurrentLocation } from '../poi-navigation.service';
 import { DecimalPipe } from '@angular/common';
 import { DistancePipe } from '../../distance.pipe';
 

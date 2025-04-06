@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DistancePipe } from 'src/app/distance.pipe';
 import { CurrentLocation, PointOfInterest } from '../poi-navigation.service';
 
 import { PoiNavigationElementComponent } from './poi-navigation-element.component';

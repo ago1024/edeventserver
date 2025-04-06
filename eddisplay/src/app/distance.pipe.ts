@@ -10,7 +10,7 @@ export class DistancePipe implements PipeTransform {
 	constructor(@Inject(LOCALE_ID) private _locale: string) {}
 
 
-	transform(value: unknown, ...args: unknown[]): unknown {
+	transform(value: unknown): unknown {
 		if (typeof(value) === 'number') {
 			const distance: number = value as number;
 

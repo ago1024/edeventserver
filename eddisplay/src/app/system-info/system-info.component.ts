@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SystemInfoService } from './system-info.service';
 import { AsyncPipe } from '@angular/common';
 

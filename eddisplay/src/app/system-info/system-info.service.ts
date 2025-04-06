@@ -122,7 +122,7 @@ export class SystemInfoService {
 	}
 
 	private createInfo(info: FactionsInfoEvent) {
-		let lines = [];
+		const lines: string[] = [];
 
 		lines.push(`:satellite: ${info.StarSystem}`);
 

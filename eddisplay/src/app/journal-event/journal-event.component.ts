@@ -13,6 +13,4 @@ export class JournalEventComponent {
 	@Input()
 	journalEvent: JournalEvent;
 
-	constructor() { }
-
 }
