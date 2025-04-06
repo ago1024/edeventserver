@@ -3,7 +3,6 @@ import { buffer, filter, map, scan, shareReplay, startWith, tap, withLatestFrom 
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subscription } from 'rxjs';
 
 export interface LoadoutEvent extends JournalEvent {
 	event: 'Loadout';
@@ -91,12 +90,6 @@ export class MiningEventListService {
 		tap(events => console.log(events)),
 	);
 
-	private readonly subscription = new Subscription()
-		.add(this.motherlodeCounter$.subscribe())
-		.add(this.lastProspected$.subscribe())
-		.add(this.cargoCount$.subscribe())
-		.add(this.cargoCapacity$.subscribe());
-
 	miningEvents: JournalEvent[] = [];
 
 	constructor() {
@@ -113,6 +106,11 @@ export class MiningEventListService {
 				})
 			)
 			.subscribe((event: JournalEvent) => this.next(event));
+
+		this.motherlodeCounter$.subscribe();
+		this.lastProspected$.subscribe();
+		this.cargoCount$.subscribe();
+		this.cargoCapacity$.subscribe();
 	}
 
 	private next(event: JournalEvent): void {
