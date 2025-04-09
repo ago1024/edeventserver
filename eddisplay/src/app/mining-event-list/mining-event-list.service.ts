@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { buffer, filter, map, scan, shareReplay, startWith, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilKeyChanged, filter, map, scan, shareReplay, startWith, switchMap, window, withLatestFrom } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isEqual } from 'lodash';
 
 export interface LoadoutEvent extends JournalEvent {
 	event: 'Loadout';
@@ -25,7 +26,7 @@ export interface LoadoutEvent extends JournalEvent {
 
 export interface ProspectedAsteroidEvent extends JournalEvent {
 	event: 'ProspectedAsteroid';
-	Matetrials: {
+	Materials: {
 		Name: string;
 		Proportion: number;
 	}[];
@@ -81,13 +82,16 @@ export class MiningEventListService {
 
 	public readonly motherlodeCounter$ = this.prospected$.pipe(
 		filter(event => !!event.MotherlodeMaterial),
-		buffer(this.edEventService.events$.pipe(filter(event => ['LoadGame', 'SupercruiseExit', 'SupercruiseEntry', 'FSDJump'].includes(event.event)))),
-		filter(events => events.length > 0),
-		map(events => events.reduce((acc, event) => {
-			acc[event.MotherlodeMaterial] = 1 + (acc[event.MotherlodeMaterial] ?? 0);
-			return acc;
-		}, {})),
-		tap(events => console.log(events)),
+		window(this.edEventService.events$.pipe(filter(event => ['LoadGame', 'SupercruiseExit', 'SupercruiseEntry', 'FSDJump'].includes(event.event)))),
+		switchMap(window => window.pipe(
+			distinctUntilKeyChanged('Materials', isEqual),
+			scan((acc, event) => {
+				acc[event.MotherlodeMaterial] = 1 + (acc[event.MotherlodeMaterial] ?? 0);
+				return acc;
+			}, {} as Record<string, number>),
+			startWith({}),
+		)),
+		shareReplay(1),
 	);
 
 	miningEvents: JournalEvent[] = [];

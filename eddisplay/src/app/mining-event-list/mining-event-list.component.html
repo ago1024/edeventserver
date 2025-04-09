@@ -21,6 +21,19 @@
 			</div>
 		}
 	</div>
+
+	@if (ratios$ | async; as ratios) {
+		@if (ratios?.length) {
+			<h3>Ratios</h3>
+			<div class="core-ratios">
+				@for (ratio of ratios; track ratio.material) {
+					<span>
+					{{ ratio.material }}: {{ ratio.ratio | percent }} ({{ ratio.count }})
+					</span>
+				}
+			</div>
+		}
+	}
 }
 
 @if (service.miningEvents) {

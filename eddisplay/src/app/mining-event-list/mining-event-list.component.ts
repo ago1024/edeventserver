@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { MiningEventComponent } from '../mining-event/mining-event.component';
 import { MiningEventListService, ProspectedAsteroidEvent } from './mining-event-list.service';
 import { AsyncPipe, PercentPipe } from '@angular/common';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -20,6 +20,21 @@ export class MiningEventListComponent {
 	readonly service = inject(MiningEventListService);
 	readonly miningEvents = this.service.miningEvents;
 	readonly soundEnabled = signal(false);
+
+	readonly ratios$ = this.service.motherlodeCounter$.pipe(
+		map(counter => {
+			const total = Object.values(counter).reduce((sum, value) => sum += value, 0);
+			if (total === 0) {
+				return [];
+			}
+			function* generator() {
+				for (const [material, count] of Object.entries(counter)) {
+					yield { material, count, ratio: count / total };
+				}
+			}
+			return Array.from(generator());
+		}),
+	)
 
 	private readonly subscription = this.service.prospected$.pipe(
 		takeUntilDestroyed(),
