@@ -9,7 +9,16 @@
 	@for (event of events$ | async; track $index) {
 		<li>
 			<p><span class="text-upper">Merits:</span> {{ event.Merits }} - {{ event.timestamp }}</p>
+		</li>
+	}
+</ul>
 
+<h1>Merits gained</h1>
+
+<ul>
+	@for (merits of merits$ | async; track $index) {
+		<li>
+			<p><span class="text-upper">Merits:</span> {{ merits.MeritsGained }} - {{ merits.TotalMerits }}</p>
 		</li>
 	}
 </ul>

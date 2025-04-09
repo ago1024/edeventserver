@@ -4,12 +4,26 @@ import { filter, shareReplay } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
 
-export interface PowerplayEvent extends JournalEvent {
-	event: 'Powerplay',
+interface Rank {
 	Power: string;
 	Rank: number;
+}
+
+export interface PowerplayEvent extends JournalEvent, Rank {
+	event: 'Powerplay',
 	Merits: number;
 	TimePledged: number;
+}
+
+export interface PowerplayRank extends JournalEvent, Rank {
+	event: 'PowerplayRank',
+}
+
+export interface PowerplayMerits extends JournalEvent {
+	event: 'PowerplayMerits';
+	Power: string;
+	MeritsGained: number;
+	TotalMerits: number;
 }
 
 @Injectable({
@@ -24,6 +38,15 @@ export class PowerplayService {
 		shareReplay({ refCount: false, bufferSize: 10 }),
 	);
 
-	private readonly subscription = this.status$.subscribe();
+	public readonly merits$ = this.eventService.events$.pipe(
+		takeUntilDestroyed(),
+		filter((event): event is PowerplayMerits => event?.event === 'PowerplayMerits'),
+		shareReplay({ refCount: false, bufferSize: 10 }),
+	);
+
+	constructor() {
+		this.status$.subscribe();
+		this.merits$.subscribe();
+	}
 
 }
