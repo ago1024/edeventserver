@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, EMPTY, of } from 'rxjs';
-import { catchError, filter, map, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export type FactionState = string;
 
@@ -48,11 +49,20 @@ export interface FactionsInfoEvent extends JournalEvent {
 	Conflicts?: Conflict[];
 }
 
-export interface FSDJumpEvent extends FactionsInfoEvent {
+export interface PowerplayInfo {
+	ControllingPower: string,
+	Powers: string[],
+	PowerplayState: string;
+	PowerplayStateControlProgress: number;
+	PowerplayStateReinforcement: number;
+	PowerplayStateUndermining: number;
+}
+
+export interface FSDJumpEvent extends FactionsInfoEvent, PowerplayInfo {
 	event: 'FSDJumpEvent';
 }
 
-export interface LocationEvent extends FactionsInfoEvent {
+export interface LocationEvent extends FactionsInfoEvent, PowerplayInfo {
 	event: 'Location';
 }
 
@@ -66,12 +76,13 @@ const states = {
 	'Boom': 'boom',
 	'Expansion': 'expansion',
 	'Retreat': 'retreat',
-	'CivilLiberty': '',
+	'CivilLiberty': 'civilliberty',
+	'PublicHoliday': 'holiday',
 	'Outbreak': ':biohazard:',
-	'Famine': '',
-	'Drought': '',
-	'NaturalDisaster': '',
-	'PublicHoliday': '',
+	'Famine': 'famine',
+	'Drought': 'drought',
+	'NaturalDisaster': 'disaster',
+	'InfrastructureFailure': 'infrafailure',
 }
 const conflict_types = {
 	'war': ':umop:',
@@ -90,6 +101,24 @@ const formatter = Intl.NumberFormat('en-US', { style: 'percent', minimumFraction
 })
 export class SystemInfoService {
 
+	private readonly eventService = inject(EdEventService);
+
+	public readonly event$ = this.eventService.events$
+		.pipe(
+			switchMap(event => {
+				switch (event?.event) {
+					case 'FSDJump':
+						return of(event as FSDJumpEvent);
+					case 'Location':
+						return of(event as LocationEvent);
+					default:
+						return EMPTY;
+				}
+			}),
+			shareReplay({ refCount: false, bufferSize: 1 }),
+		);
+
+
 	private readonly _current = new BehaviorSubject<FactionsInfoEvent>(undefined);
 
 	public readonly currentInfo$ = this._current.pipe(
@@ -102,23 +131,11 @@ export class SystemInfoService {
 	);
 
 	constructor() {
-		const eventService = inject(EdEventService);
 
-		eventService.events$
-			.pipe(
-				switchMap(event => {
-					switch (event?.event) {
-						case 'FSDJump':
-							return of(event as FSDJumpEvent);
-						case 'Location':
-							return of(event as LocationEvent);
-						default:
-							return EMPTY;
-					}
-				}),
-				filter(event => !!event.Factions),
-			)
-			.subscribe(this._current);
+		this.event$.pipe(
+			takeUntilDestroyed(),
+			filter(event => !!event.Factions),
+		).subscribe(this._current);
 	}
 
 	private createInfo(info: FactionsInfoEvent) {
@@ -136,11 +153,11 @@ export class SystemInfoService {
 			const standings = conflict && conflict.Status &&
 				`(${conflict_types[conflict.WarType]}${conflict_status[conflict.Status] || ''} ${conflict.Faction1.WonDays}-${conflict.Faction2.WonDays})` || '';
 
-			const faction_states = (faction.ActiveStates || [])
-				.map(state => (state.State && states[state.State]) ?? console.warn('Unsupported State', state.State) ?? '')
+			const faction_states = [standings, ...(faction.ActiveStates || []).map(state => (state.State && states[state.State]) ?? console.warn('Unsupported State', state.State) ?? '')]
+				.filter(Boolean)
 				.join(' ');
 
-			lines.push(`${faction.Name}: ${formatter.format(faction.Influence)} ${standings} ${faction_states}`);
+			lines.push(`${faction.Name}: ${formatter.format(faction.Influence)} ${faction_states}`);
 		}
 		return lines.join('\n');
 	}
