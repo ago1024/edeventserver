@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, shareReplay } from 'rxjs/operators';
+import { filter, shareReplay, window, switchMap, scan, map } from 'rxjs/operators';
 import { EdEventService } from '../ed-event.service';
 import { JournalEvent } from '../interfaces';
 
@@ -41,6 +41,16 @@ export class PowerplayService {
 	public readonly merits$ = this.eventService.events$.pipe(
 		takeUntilDestroyed(),
 		filter((event): event is PowerplayMerits => event?.event === 'PowerplayMerits'),
+		window(this.status$),
+		switchMap(window$ => window$.pipe(
+			scan((acc, value) => {
+				acc.push(value);
+				return acc.slice(-10);
+			}, [] as PowerplayMerits[]),
+			map(arr => [...arr].reverse()),
+		)),
+
+
 		shareReplay({ refCount: false, bufferSize: 10 }),
 	);
 

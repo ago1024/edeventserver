@@ -18,7 +18,13 @@
 <ul>
 	@for (merits of merits$ | async; track $index) {
 		<li>
-			<p><span class="text-upper">Merits:</span> {{ merits.MeritsGained }} - {{ merits.TotalMerits }}</p>
+			<p><span class="text-upper">Merits:</span> {{ merits.MeritsGained }} - {{ merits.TotalMerits }} - {{ merits.timestamp }}</p>
 		</li>
 	}
 </ul>
+
+<h1>System</h1>
+
+<pre>
+{{ systemInfo$ | async | json }}
+</pre>
