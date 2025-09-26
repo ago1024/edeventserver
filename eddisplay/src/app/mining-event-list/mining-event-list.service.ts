@@ -39,6 +39,7 @@ export interface ProspectedAsteroidEvent extends JournalEvent {
 
 const PROSPECTOR_COUNT = {
 	int_dronecontrol_prospector_size3_class5: 2,
+	int_dronecontrol_prospector_size5_class5: 4,
 }
 
 @Injectable({
